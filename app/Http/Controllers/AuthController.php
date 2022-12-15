@@ -2,13 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Symfony\Component\HttpFoundation\Response;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
 {
+    const USER_ROLE_ID = 1; 
+
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -27,13 +31,40 @@ class AuthController extends Controller
         $user = User::create([
             'name' => $request->get('name'),
             'email' => $request->get('email'),
-            'password' => bcrypt($request->password)
+            'password' => bcrypt($request->password),
+            'role_id' => 1
         ]);
-
-        // $user->roles()->attach(self::USER_ROLE_ID);
 
         $token = JWTAuth::fromUser($user);
 
         return response()->json(compact('user', 'token'), 201);
+    }
+
+    public function login(Request $request)
+    {
+        $input = $request->only('email', 'password');
+        
+        $jwt_token = null;
+
+        if (!$jwt_token = JWTAuth::attempt($input)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid Email or Password',
+            ], Response::HTTP_UNAUTHORIZED);
+        }
+
+        return response()->json([
+            'success' => true,
+            'token' => $jwt_token,
+        ]);
+    }
+
+    public function profile()
+    {
+        return response()->json(
+            [
+                'user' => auth()->user()
+            ]
+        );
     }
 }
