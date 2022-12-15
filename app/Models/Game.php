@@ -13,6 +13,7 @@ class Game extends Model
         'name',
         'genre',
         'platform',
+        'user_id'
     ];
 
     public function users()
