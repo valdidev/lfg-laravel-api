@@ -23,4 +23,5 @@ Route::group([
     'middleware' => 'jwt.auth'
 ], function () {
     Route::post('/createparty', [PartyController::class, 'createParty']);
+    Route::get('/parties/{id}', [PartyController::class, 'getPartiesByGameId']);
 });
