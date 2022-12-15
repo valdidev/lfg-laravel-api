@@ -58,7 +58,7 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany(Post::class);
     }
 
-    public function info()
+    public function moreUserInfo()
     {
         return $this->hasOne(MoreUserInfo::class);
     }
