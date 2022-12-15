@@ -20,18 +20,36 @@ class GameController extends Controller
                 'platform' => $request->get('platform'),
                 'user_id' => $userId
             ]);
-            
-            
+
+
             return response()->json([
                 'success' => true,
                 'message' => 'Game created',
                 'data' => $game
             ]);
         } catch (\Throwable $th) {
-            Log::error('Something went wrong creating new game...'.$th->getMessage());
+            Log::error('Something went wrong creating new game...' . $th->getMessage());
             return response()->json([
                 'success' => true,
                 'message' => 'Game could not be created'
+            ], 500);
+        }
+    }
+
+    public function getAllGames()
+    {
+        try {
+            $games = Game::query()->get();
+            return response()->json([
+                'success' => true,
+                'message' => 'Games retrieved',
+                'data' => $games
+            ]);
+        } catch (\Throwable $th) {
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Could not retrieve games'
             ], 500);
         }
     }

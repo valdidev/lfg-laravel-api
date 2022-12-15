@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\GameController;
+use App\Http\Controllers\PartyController;
 use Illuminate\Support\Facades\Route;
 
 // AUTHENTICATION
@@ -14,4 +15,12 @@ Route::group([
     'middleware' => ['jwt.auth', 'isAdmin']
 ], function () {
     Route::post('/creategame', [GameController::class, 'createGame']);
+    Route::get('/games', [GameController::class, 'getAllGames']);
+});
+
+// PARTIES
+Route::group([
+    'middleware' => 'jwt.auth'
+], function () {
+    Route::post('/createparty', [PartyController::class, 'createParty']);
 });
