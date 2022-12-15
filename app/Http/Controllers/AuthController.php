@@ -43,10 +43,10 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $input = $request->only('email', 'password');
-        
         $jwt_token = null;
+        $validation = $jwt_token = JWTAuth::attempt($input);
 
-        if (!$jwt_token = JWTAuth::attempt($input)) {
+        if (!$validation) {
             return response()->json([
                 'success' => false,
                 'message' => 'Invalid Email or Password',
@@ -59,12 +59,9 @@ class AuthController extends Controller
         ]);
     }
 
-    public function profile()
+    public function logout()
     {
-        return response()->json(
-            [
-                'user' => auth()->user()
-            ]
-        );
+        auth()->logout();
+        return response()->json(['message' => 'Logged out']);
     }
 }
