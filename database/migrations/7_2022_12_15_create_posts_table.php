@@ -11,6 +11,7 @@ return new class extends Migration
         Schema::create('posts', function (Blueprint $table) {
             $table->id();
             $table->string('message', 200);
+            $table->boolean('is_visible');
 
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('party_id');

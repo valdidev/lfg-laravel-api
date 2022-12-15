@@ -34,5 +34,7 @@ Route::group([
     'middleware' => 'jwt.auth'
 ], function () {
     Route::post('/sendpost', [PostController::class, 'sendPost']);
+    Route::post('/removepost/{id}', [PostController::class, 'changePostVisibility']);
+    Route::get('/allposts/{id}', [PostController::class, 'getAllPartyPosts']);
 });
 

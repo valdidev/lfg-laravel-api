@@ -20,7 +20,8 @@ class PostController extends Controller
                 $post = Post::create([
                     'message' => $request->get('message'),
                     'user_id' => $userId,
-                    'party_id' => $party
+                    'party_id' => $party,
+                    'is_visible' => true
                 ]);
 
                 return response()->json([
@@ -41,5 +42,40 @@ class PostController extends Controller
                 'message' => 'Could not send message'
             ], 500);
         }
+    }
+
+    // as delete function to common users
+    public function changePostVisibility($id)
+    {
+        try {
+            $userId = auth()->user()->id;
+            $own = Post::where('user_id', $userId)->find($id);
+
+            if ($own) {
+                Post::where('id', $id)->update(['is_visible' => false]);
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Post deleted'
+                ]);
+
+            } else {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Unauthorized'
+                ], 401);
+            }
+
+        } catch (\Throwable $th) {
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Could not delete message'
+            ], 500);
+        }
+    }
+
+    public function getAllPartyPosts($id)
+    {
+        return 'getAllPartyPosts'.$id;
     }
 }

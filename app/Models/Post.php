@@ -12,7 +12,8 @@ class Post extends Model
   protected $fillable = [
     'message',
     'user_id',
-    'party_id'
+    'party_id',
+    'is_visible'
   ];
 
   public function user()
