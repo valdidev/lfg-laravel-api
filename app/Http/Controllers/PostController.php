@@ -38,7 +38,7 @@ class PostController extends Controller
         } catch (\Throwable $th) {
 
             return response()->json([
-                'success' => true,
+                'success' => false,
                 'message' => 'Could not send message'
             ], 500);
         }
@@ -57,18 +57,16 @@ class PostController extends Controller
                     'success' => true,
                     'message' => 'Post deleted'
                 ]);
-
             } else {
                 return response()->json([
                     'success' => false,
                     'message' => 'Unauthorized'
                 ], 401);
             }
-
         } catch (\Throwable $th) {
 
             return response()->json([
-                'success' => true,
+                'success' => false,
                 'message' => 'Could not delete message'
             ], 500);
         }
@@ -76,6 +74,28 @@ class PostController extends Controller
 
     public function getAllPartyPosts($id)
     {
-        return 'getAllPartyPosts'.$id;
+        try {
+            $userId = auth()->user()->id;
+            $user = User::find($userId);
+            $userParty = $user->party()->wherePivot('user_id', $userId)->find($id);
+            if ($userParty) {
+                $messages = Post::where('party_id', $id)->orderBy('id', 'DESC')->select(['posts.message', 'posts.user_id', 'posts.created_at'])->with(['user:id,name'])->get();
+                return response()->json([
+                    'success' => true,
+                    'data' => $messages
+                ]);
+            } else {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'You do not have permission in that party'
+                ], 401);
+            }
+        } catch (\Throwable $th) {
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Could not get messages'
+            ], 500);
+        }
     }
 }
