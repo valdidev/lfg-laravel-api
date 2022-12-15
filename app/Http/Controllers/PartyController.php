@@ -17,7 +17,7 @@ class PartyController extends Controller
                 'game_id' => $request->get('game_id')
             ]);
 
-            // $newParty->user()->attach($userId);
+            $newParty->users()->attach($userId, ['is_owner' => true, 'is_active' => true]);
 
             return response()->json([
                 'success' => true,
@@ -71,4 +71,33 @@ class PartyController extends Controller
             ], 500);
         }
     }
+
+    public function leaveParty($id)
+    {
+        try {
+            $userId = auth()->user()->id;
+            $party = Party::find($id);
+            $owner = $party->users()->wherePivot('is_owner', true)->find($userId);
+            if ($owner) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'The owner cant leave the party'
+                ]);
+            } else {
+                $party->users()->updateExistingPivot($userId, ['is_owner' => false, 'is_active' => false]);
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Leaving of the party...',
+                ]);
+            }
+        } catch (\Throwable $th) {
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Could not leave party'
+            ], 500);
+        }
+    }
+
+
 }
