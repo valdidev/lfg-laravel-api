@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\GameController;
 use App\Http\Controllers\PartyController;
+use App\Http\Controllers\PostController;
 use Illuminate\Support\Facades\Route;
 
 // AUTHENTICATION
@@ -27,3 +28,11 @@ Route::group([
     Route::post('/joinparty/{id}', [PartyController::class, 'joinParty']);
     Route::post('/leaveparty/{id}', [PartyController::class, 'leaveParty']);
 });
+
+// POSTS
+Route::group([
+    'middleware' => 'jwt.auth'
+], function () {
+    Route::post('/sendpost', [PostController::class, 'sendPost']);
+});
+

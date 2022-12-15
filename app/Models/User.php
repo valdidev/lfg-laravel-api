@@ -68,4 +68,14 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->hasMany(Book::class);
     }
+
+    public function posts()
+    {
+        return $this->hasMany(Post::class);
+    }
+
+    public function party()
+    {
+        return $this->belongsToMany(Party::class);
+    }
 }
