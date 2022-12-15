@@ -11,6 +11,8 @@ return new class extends Migration
         Schema::create('party_user', function (Blueprint $table) {
             $table->id();
 
+            $table->boolean('is_owner');
+            $table->boolean('is_active');
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('party_id');
 

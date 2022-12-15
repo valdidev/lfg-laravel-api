@@ -36,19 +36,38 @@ class PartyController extends Controller
     {
         try {
             $parties = Party::where('game_id', $id)->get();
-            
+
             return response()->json([
                 'success' => true,
                 'message' => 'Parties found',
                 'data' => $parties
             ]);
-
-            
         } catch (\Throwable $th) {
 
             return response()->json([
                 'success' => true,
                 'message' => 'Could not get parties'
+            ], 500);
+        }
+    }
+
+    public function joinParty($id)
+    {
+        try {
+            $userId = auth()->user()->id;
+            $party = Party::find($id);
+
+            $party->users()->attach($userId, ['is_owner' => false, 'is_active' => true]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Party joined',
+            ]);
+        } catch (\Throwable $th) {
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Could not join party'
             ], 500);
         }
     }

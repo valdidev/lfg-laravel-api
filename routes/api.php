@@ -24,4 +24,5 @@ Route::group([
 ], function () {
     Route::post('/createparty', [PartyController::class, 'createParty']);
     Route::get('/parties/{id}', [PartyController::class, 'getPartiesByGameId']);
+    Route::post('/joinparty/{id}', [PartyController::class, 'joinParty']);
 });
