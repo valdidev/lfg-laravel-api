@@ -13,10 +13,13 @@ class MoreUserInfo extends Model
         'surname',
         'age',
         'steam_account',
+        'user_id'
     ];
 
     public function user()
     {
         return $this->belongsTo(User::class);
     }
+
+    protected $table = 'more_users_info';
 }
