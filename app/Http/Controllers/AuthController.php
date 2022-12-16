@@ -5,13 +5,15 @@ namespace App\Http\Controllers;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\Response;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
 {
-    const USER_ROLE_ID = 1; 
+    const USER_ROLE_ID = 1;
 
     public function register(Request $request)
     {
@@ -32,7 +34,8 @@ class AuthController extends Controller
             'name' => $request->get('name'),
             'email' => $request->get('email'),
             'password' => bcrypt($request->password),
-            'role_id' => 1
+            'role_id' => 1,
+            'is_enabled' => true
         ]);
 
         $token = JWTAuth::fromUser($user);
@@ -55,7 +58,7 @@ class AuthController extends Controller
 
         return response()->json([
             'success' => true,
-            'token' => $jwt_token,
+            'token' => $jwt_token
         ]);
     }
 
@@ -63,5 +66,29 @@ class AuthController extends Controller
     {
         auth()->logout();
         return response()->json(['message' => 'Logged out']);
+    }
+
+    public function disableAccount()
+    {
+        try {
+            $userId = auth()->user()->id;
+
+            DB::table('users')
+                ->where('id', $userId)
+                ->update(['is_enabled' => false]);
+
+            auth()->logout();
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'Your account has been deleted'
+            ], 200);
+        } catch (\Throwable $th) {
+            Log::error('ERROR - Disabling account - ' . $th);
+            return response()->json([
+                'success' => false,
+                'message' => 'Something went wrong disabling that account'
+            ], 500);
+        }
     }
 }

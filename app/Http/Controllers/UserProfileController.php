@@ -70,22 +70,21 @@ class UserProfileController extends Controller
         try {
             $userId = auth()->user()->id;
 
-            $info = User::where('id', $userId)->select('users.name','users.email')->get();
-            
+            $info = User::where('id', $userId)->select('users.name', 'users.email')->get();
+
             $moreInfo = MoreUserInfo::where('user_id', $userId)->select('more_users_info.surname', 'more_users_info.age', 'more_users_info.steam_account')->get();
 
             return response()->json([
                 'success' => true,
                 'message' => 'profile brought successfully',
                 'data' => compact('info', 'moreInfo')
-            ], 200);             
-
+            ], 200);
         } catch (\Throwable $th) {
-            Log::error("Error retrieving user: " . $th->getMessage());
+            Log::error("Error getting user: " . $th->getMessage());
 
             return response()->json([
                 'success' => true,
-                'message' => 'User could not be retrieved'
+                'message' => 'User could not be getted'
             ], 500);
         }
     }
