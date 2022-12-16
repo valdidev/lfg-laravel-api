@@ -52,7 +52,7 @@ class AuthController extends Controller
         if (!$validation) {
             return response()->json([
                 'success' => false,
-                'message' => 'Invalid Email or Password',
+                'message' => 'Invalid email or password',
             ], Response::HTTP_UNAUTHORIZED);
         }
 
@@ -78,7 +78,7 @@ class AuthController extends Controller
                 ->update(['is_enabled' => false]);
 
             auth()->logout();
-            
+
             return response()->json([
                 'success' => true,
                 'message' => 'Your account has been deleted'
