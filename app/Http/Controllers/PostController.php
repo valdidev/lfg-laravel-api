@@ -98,4 +98,34 @@ class PostController extends Controller
             ], 500);
         }
     }
+
+    public function editPost(Request $request)
+    {
+        try {
+            $userId = auth()->user()->id;
+            $postId = $request->get('id');
+            $own = Post::where('user_id', $userId)->find($postId);
+            if ($own) {
+                $updatedPost = Post::where('id', $postId)->update([
+                    'message' => $request->get('message')
+                ]);
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Post edited',
+                    'data' => $updatedPost
+                ]);
+            } else {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Unauthorized'
+                ], 401);
+            }
+        } catch (\Throwable $th) {
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Could not edit message'
+            ], 500);
+        }
+    }
 }
