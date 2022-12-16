@@ -43,7 +43,6 @@ Route::group([
     Route::put('/editpost', [PostController::class, 'editPost']);
 });
 
-///////////////////////////////////////////
 // ONLY ADMIN
 Route::group([
     'middleware' => ['jwt.auth', 'isAdmin']
@@ -51,4 +50,3 @@ Route::group([
     Route::post('/creategame', [GameController::class, 'createGame']);
     Route::get('/games', [GameController::class, 'getAllGames']);
 });
-//////////////////////////////////////////
